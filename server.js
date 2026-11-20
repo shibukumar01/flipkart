@@ -1,13 +1,11 @@
+require('dotenv').config();
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const pool = require('./db');
 
 const PORT = process.env.PORT || 5000;
-const PRODUCTS_FILE = path.join(__dirname, 'products.json');
-
-// In-memory orders & reviews state
-let orders = [];
 
 // Helper to send JSON responses
 function sendJSON(res, statusCode, data) {
@@ -20,27 +18,34 @@ function sendJSON(res, statusCode, data) {
   res.end(JSON.stringify(data));
 }
 
-// Read products safely
-function getProducts() {
-  try {
-    const raw = fs.readFileSync(PRODUCTS_FILE, 'utf8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error('Failed to read products file', err);
-    return [];
+// Format product row from DB to match frontend expectations
+function formatProduct(row) {
+  let specs = [];
+  if (row.specs) {
+    try {
+      specs = typeof row.specs === 'string' ? JSON.parse(row.specs) : row.specs;
+    } catch {
+      specs = [];
+    }
   }
+  return {
+    id: row.id,
+    name: row.name,
+    category: row.category,
+    image: row.image,
+    price: Number(row.price),
+    originalPrice: row.originalPrice ? Number(row.originalPrice) : undefined,
+    discount: row.discount || '',
+    rating: Number(row.rating) || 0,
+    ratingCount: Number(row.ratingCount) || 0,
+    reviewsCount: Number(row.reviewsCount) || 0,
+    isFlipkartAssured: Boolean(row.isFlipkartAssured),
+    specs,
+    description: row.description || ''
+  };
 }
 
-// Save products if modified
-function saveProducts(products) {
-  try {
-    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf8');
-  } catch (err) {
-    console.error('Failed to save products file', err);
-  }
-}
-
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   const pathname = parsedUrl.pathname;
   const method = req.method;
@@ -56,111 +61,161 @@ const server = http.createServer((req, res) => {
   }
 
   // API Endpoints
-  // 1. Get all products with filtering, search, category, sort
+  // 1. Get all products with filtering, search, category, sort from MySQL
   if (pathname === '/api/products' && method === 'GET') {
-    let products = getProducts();
-    const { category, search, sort, maxPrice, minRating } = parsedUrl.query;
+    try {
+      const { category, search, sort, maxPrice, minRating } = parsedUrl.query;
+      let sql = 'SELECT * FROM products WHERE 1=1';
+      const params = [];
 
-    if (category && category !== 'All') {
-      products = products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+      if (category && category !== 'All') {
+        sql += ' AND LOWER(category) = LOWER(?)';
+        params.push(category);
+      }
+
+      if (search) {
+        const q = `%${search.trim().toLowerCase()}%`;
+        sql += ' AND (LOWER(name) LIKE ? OR LOWER(category) LIKE ? OR LOWER(description) LIKE ?)';
+        params.push(q, q, q);
+      }
+
+      if (maxPrice) {
+        sql += ' AND price <= ?';
+        params.push(Number(maxPrice));
+      }
+
+      if (minRating) {
+        sql += ' AND rating >= ?';
+        params.push(Number(minRating));
+      }
+
+      if (sort === 'price_asc') {
+        sql += ' ORDER BY price ASC';
+      } else if (sort === 'price_desc') {
+        sql += ' ORDER BY price DESC';
+      } else if (sort === 'rating') {
+        sql += ' ORDER BY rating DESC';
+      } else {
+        sql += ' ORDER BY created_at DESC';
+      }
+
+      const [rows] = await pool.query(sql, params);
+      const products = rows.map(formatProduct);
+      return sendJSON(res, 200, { success: true, count: products.length, products });
+    } catch (err) {
+      console.error('MySQL query error in /api/products:', err);
+      return sendJSON(res, 500, { success: false, message: 'Database error fetching products' });
     }
-
-    if (search) {
-      const q = search.toLowerCase().trim();
-      products = products.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        (p.description && p.description.toLowerCase().includes(q))
-      );
-    }
-
-    if (maxPrice) {
-      products = products.filter(p => p.price <= Number(maxPrice));
-    }
-
-    if (minRating) {
-      products = products.filter(p => p.rating >= Number(minRating));
-    }
-
-    if (sort === 'price_asc') {
-      products.sort((a, b) => a.price - b.price);
-    } else if (sort === 'price_desc') {
-      products.sort((a, b) => b.price - a.price);
-    } else if (sort === 'rating') {
-      products.sort((a, b) => b.rating - a.rating);
-    }
-
-    return sendJSON(res, 200, { success: true, count: products.length, products });
   }
 
-  // 2. Get single product by ID
+  // 2. Get single product by ID from MySQL
   if (pathname.startsWith('/api/products/') && method === 'GET') {
     const id = pathname.replace('/api/products/', '');
-    const products = getProducts();
-    const product = products.find(p => p.id === id);
-
-    if (product) {
-      return sendJSON(res, 200, { success: true, product });
-    } else {
-      return sendJSON(res, 404, { success: false, message: 'Product not found' });
+    try {
+      const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+      if (rows.length > 0) {
+        return sendJSON(res, 200, { success: true, product: formatProduct(rows[0]) });
+      } else {
+        return sendJSON(res, 404, { success: false, message: 'Product not found' });
+      }
+    } catch (err) {
+      console.error('MySQL query error in /api/products/:id:', err);
+      return sendJSON(res, 500, { success: false, message: 'Database error fetching product' });
     }
   }
 
-  // 3. Get Categories summary
+  // 3. Get Categories summary from MySQL
   if (pathname === '/api/categories' && method === 'GET') {
-    const products = getProducts();
-    const categoryMap = {};
-    products.forEach(p => {
-      categoryMap[p.category] = (categoryMap[p.category] || 0) + 1;
-    });
-    const categories = Object.keys(categoryMap).map(name => ({
-      name,
-      count: categoryMap[name]
-    }));
-    return sendJSON(res, 200, { success: true, categories });
+    try {
+      const [rows] = await pool.query('SELECT category AS name, COUNT(*) AS count FROM products GROUP BY category');
+      return sendJSON(res, 200, { success: true, categories: rows });
+    } catch (err) {
+      console.error('MySQL query error in /api/categories:', err);
+      return sendJSON(res, 500, { success: false, message: 'Database error fetching categories' });
+    }
   }
 
-  // 4. Place an order (Checkout)
+  // 4. Place an order (Checkout) - saved into MySQL
   if (pathname === '/api/orders' && method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         const orderData = JSON.parse(body || '{}');
         const orderId = 'OD' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 900 + 100);
+        const createdAt = new Date().toISOString();
+        const customer = orderData.customer || { name: 'Valued Customer', phone: '9876543210' };
+        const items = orderData.items || [];
+        const totalAmount = Number(orderData.totalAmount) || 0;
+        const paymentMethod = orderData.paymentMethod || 'UPI / Card / Cash on Delivery';
+        const status = 'Confirmed';
+
+        await pool.query(
+          `INSERT INTO orders (orderId, createdAt, customerName, customerPhone, items, totalAmount, paymentMethod, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            orderId,
+            createdAt,
+            customer.name,
+            customer.phone,
+            JSON.stringify(items),
+            totalAmount,
+            paymentMethod,
+            status
+          ]
+        );
+
         const newOrder = {
           orderId,
-          createdAt: new Date().toISOString(),
-          customer: orderData.customer || { name: 'Valued Customer', phone: '9876543210' },
-          items: orderData.items || [],
-          totalAmount: orderData.totalAmount || 0,
-          paymentMethod: orderData.paymentMethod || 'UPI / Card / Cash on Delivery',
-          status: 'Confirmed'
+          createdAt,
+          customer,
+          items,
+          totalAmount,
+          paymentMethod,
+          status
         };
-        orders.unshift(newOrder);
+
         return sendJSON(res, 201, { success: true, message: 'Order placed successfully!', order: newOrder });
       } catch (err) {
-        return sendJSON(res, 400, { success: false, message: 'Invalid order payload' });
+        console.error('MySQL insert error in /api/orders:', err);
+        return sendJSON(res, 400, { success: false, message: 'Invalid order payload or database error' });
       }
     });
     return;
   }
 
-  // 5. List Orders
+  // 5. List Orders from MySQL
   if (pathname === '/api/orders' && method === 'GET') {
-    return sendJSON(res, 200, { success: true, orders });
+    try {
+      const [rows] = await pool.query('SELECT * FROM orders ORDER BY createdAt DESC');
+      const orders = rows.map(r => ({
+        orderId: r.orderId,
+        createdAt: r.createdAt,
+        customer: { name: r.customerName, phone: r.customerPhone },
+        items: typeof r.items === 'string' ? JSON.parse(r.items) : (r.items || []),
+        totalAmount: Number(r.totalAmount),
+        paymentMethod: r.paymentMethod,
+        status: r.status
+      }));
+      return sendJSON(res, 200, { success: true, orders });
+    } catch (err) {
+      console.error('MySQL query error in /api/orders:', err);
+      return sendJSON(res, 500, { success: false, message: 'Database error fetching orders' });
+    }
   }
 
-  // 6. Add product (Admin mock)
+  // 6. Add product (Admin) - saved into MySQL
   if (pathname === '/api/products' && method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         const productData = JSON.parse(body || '{}');
-        const products = getProducts();
+        const [cntRows] = await pool.query('SELECT COUNT(*) as count FROM products');
+        const newId = 'prod-' + (cntRows[0].count + 1);
+
         const newProduct = {
-          id: 'prod-' + (products.length + 1),
+          id: newId,
           name: productData.name || 'New Item',
           category: productData.category || 'Mobiles',
           image: productData.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
@@ -174,11 +229,32 @@ const server = http.createServer((req, res) => {
           specs: productData.specs || ['High Quality', 'Standard Warranty'],
           description: productData.description || 'Verified authentic product.'
         };
-        products.push(newProduct);
-        saveProducts(products);
+
+        await pool.query(
+          `INSERT INTO products 
+           (id, name, category, image, price, originalPrice, discount, rating, ratingCount, reviewsCount, isFlipkartAssured, specs, description)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            newProduct.id,
+            newProduct.name,
+            newProduct.category,
+            newProduct.image,
+            newProduct.price,
+            newProduct.originalPrice,
+            newProduct.discount,
+            newProduct.rating,
+            newProduct.ratingCount,
+            newProduct.reviewsCount,
+            newProduct.isFlipkartAssured ? 1 : 0,
+            JSON.stringify(newProduct.specs),
+            newProduct.description
+          ]
+        );
+
         return sendJSON(res, 201, { success: true, product: newProduct });
       } catch (err) {
-        return sendJSON(res, 400, { success: false, message: 'Invalid product payload' });
+        console.error('MySQL insert error in /api/products:', err);
+        return sendJSON(res, 400, { success: false, message: 'Invalid product payload or database error' });
       }
     });
     return;
@@ -222,5 +298,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Flipkart Clone server is running smoothly on http://localhost:${PORT}`);
+  console.log(`Flipkart Clone server connected to MySQL (${process.env.DB_NAME}) running on http://localhost:${PORT}`);
 });
