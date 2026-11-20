@@ -1,0 +1,21 @@
+{
+  "name": "flipkart-clone",
+  "version": "1.0.0",
+  "description": "Full Stack Flipkart Clone built with React and Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "ecommerce",
+    "flipkart",
+    "react",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "mysql2": "^3.24.6"
+  }
+}

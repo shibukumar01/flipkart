@@ -1,0 +1,251 @@
+[
+  {
+    "id": "prod-1",
+    "name": "Apple iPhone 15 (Blue, 128 GB)",
+    "category": "Mobiles",
+    "image": "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/k/l/l/-original-imagtc5fz9spysyk.jpeg?q=70",
+    "price": 65999,
+    "originalPrice": 79900,
+    "discount": "17% off",
+    "rating": 4.6,
+    "ratingCount": 182390,
+    "reviewsCount": 8421,
+    "isFlipkartAssured": true,
+    "specs": [
+      "128 GB ROM",
+      "15.49 cm (6.1 inch) Super Retina XDR Display",
+      "48MP + 12MP | 12MP Front Camera",
+      "A16 Bionic Chip, 6 Core Processor",
+      "Dynamic Island Experience"
+    ],
+    "description": "Experience the iPhone 15 with Dynamic Island, 48MP main camera with 2x Telephoto, durable color-infused glass and aluminum design, and USB-C connectivity."
+  },
+  {
+    "id": "prod-2",
+    "name": "Samsung Galaxy S24 5G (Onyx Black, 256 GB)",
+    "category": "Mobiles",
+    "image": "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/3/5/l/-original-imagx9egm9mgmvab.jpeg?q=70",
+    "price": 74999,
+    "originalPrice": 89999,
+    "discount": "16% off",
+    "rating": 4.5,
+    "ratingCount": 42100,
+    "reviewsCount": 2130,
+    "isFlipkartAssured": true,
+    "specs": [
+      "8 GB RAM | 256 GB ROM",
+      "15.75 cm (6.2 inch) Full HD+ Dynamic AMOLED 2X Display",
+      "50MP + 12MP + 10MP | 12MP Front Camera",
+      "4000 mAh Battery",
+      "Exynos 2400 Processor with Galaxy AI"
+    ],
+    "description": "Galaxy S24 with next-gen AI features including Live Translate, Circle to Search, and brilliant camera technology in a sleek titanium armor design."
+  },
+  {
+    "id": "prod-3",
+    "name": "Apple MacBook AIR Apple M2 - (8 GB/256 GB SSD/Mac OS Monterey) MLY33HN/A",
+    "category": "Electronics",
+    "image": "https://rukminim2.flixcart.com/image/312/312/xif0q/computer/2/v/v/-original-imagfdeqter4sj2j.jpeg?q=70",
+    "price": 84990,
+    "originalPrice": 99900,
+    "discount": "14% off",
+    "rating": 4.7,
+    "ratingCount": 12540,
+    "reviewsCount": 980,
+    "isFlipkartAssured": true,
+    "specs": [
+      "Apple M2 Processor",
+      "8 GB Unified RAM",
+      "256 GB SSD",
+      "34.54 cm (13.6 Inch) Liquid Retina Display",
+      "Up to 18 Hours Battery Life"
+    ],
+    "description": "Redesigned around the next-generation M2 chip, MacBook Air is strikingly thin and brings exceptional speed and power efficiency inside its durable all-aluminum enclosure."
+  },
+  {
+    "id": "prod-4",
+    "name": "Sony WH-1000XM5 Bluetooth Noise Cancelling Headset",
+    "category": "Electronics",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/headphone/p/r/z/wh-1000xm5-sony-original-imaghzgpkf7phzgz.jpeg?q=70",
+    "price": 26990,
+    "originalPrice": 34990,
+    "discount": "22% off",
+    "rating": 4.6,
+    "ratingCount": 8920,
+    "reviewsCount": 789,
+    "isFlipkartAssured": true,
+    "specs": [
+      "Industry Leading Noise Cancellation with 8 Mics",
+      "Auto NC Optimizer",
+      "Up to 30 Hours Battery Life",
+      "Quick Charging (3 min charge for 3 hours playback)",
+      "Crystal Clear Hands-free Calling"
+    ],
+    "description": "Industry-leading noise cancellation optimized to your environment and ultra-comfortable lightweight design with soft fit leather."
+  },
+  {
+    "id": "prod-5",
+    "name": "Fastrack Optimus Pro 1.43\" AMOLED with BT Calling Smartwatch",
+    "category": "Fashion",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/q/v/t/-original-imagq94n59zygyhg.jpeg?q=70",
+    "price": 1999,
+    "originalPrice": 5995,
+    "discount": "66% off",
+    "rating": 4.2,
+    "ratingCount": 45120,
+    "reviewsCount": 3520,
+    "isFlipkartAssured": true,
+    "specs": [
+      "1.43\" UltraVU AMOLED Display (466x466)",
+      "SingleSync BT Calling with Favorite Contacts Storage",
+      "100+ Sports Modes & Health Suite",
+      "Up to 7 Days Battery Life",
+      "IP68 Water Resistance"
+    ],
+    "description": "Step up your style and health tracking with stunning AMOLED display, seamless Bluetooth calling and 100+ sport tracking features."
+  },
+  {
+    "id": "prod-6",
+    "name": "Puma Men Solid Regular Fit Crew Neck T-shirt",
+    "category": "Fashion",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/t-shirt/b/s/8/m-67018301-puma-original-imaghycfyvf7e42d.jpeg?q=70",
+    "price": 799,
+    "originalPrice": 1499,
+    "discount": "46% off",
+    "rating": 4.3,
+    "ratingCount": 18450,
+    "reviewsCount": 890,
+    "isFlipkartAssured": true,
+    "specs": [
+      "100% Breathable Cotton Fabric",
+      "Classic Crew Neck & Short Sleeves",
+      "Standard Slim Fit",
+      "Machine Wash Friendly"
+    ],
+    "description": "Elevate your everyday wardrobe with Puma's authentic cotton tee offering breathable comfort and minimalist iconic branding."
+  },
+  {
+    "id": "prod-7",
+    "name": "LG 7 kg 5 Star Inverter Fully Automatic Front Load Washing Machine",
+    "category": "Appliances",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/washing-machine-new/m/f/h/-original-imah488ffzgyeh6q.jpeg?q=70",
+    "price": 28990,
+    "originalPrice": 38990,
+    "discount": "25% off",
+    "rating": 4.5,
+    "ratingCount": 24100,
+    "reviewsCount": 1840,
+    "isFlipkartAssured": true,
+    "specs": [
+      "7 kg Capacity: Suitable for 3-4 members",
+      "5 Star Energy Rating",
+      "1200 RPM Spin Speed",
+      "6 Motion DD technology with Inverter Direct Drive",
+      "Steam Wash for Allergy Care"
+    ],
+    "description": "Keep clothes spotless, sanitized, and gentle on fibers with LG AI DD front loading washing machine."
+  },
+  {
+    "id": "prod-8",
+    "name": "Godrej 223 L Frost Free Double Door 3 Star Refrigerator",
+    "category": "Appliances",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/refrigerator-new/d/r/8/-original-imahy3a7t8zz3r2n.jpeg?q=70",
+    "price": 22490,
+    "originalPrice": 29990,
+    "discount": "25% off",
+    "rating": 4.3,
+    "ratingCount": 11300,
+    "reviewsCount": 730,
+    "isFlipkartAssured": true,
+    "specs": [
+      "Double Door 223 Liters Capacity",
+      "3 Star Energy Efficiency",
+      "Advanced Inverter Compressor",
+      "Nano Shield Technology 95%+ Food Surface Disinfection",
+      "Large Vegetable Tray"
+    ],
+    "description": "Reliable cooling with long-lasting freshness and inverter energy savings for modern households."
+  },
+  {
+    "id": "prod-9",
+    "name": "Wakefit Orthopedic Memory Foam 6 Inch Queen Mattress",
+    "category": "Home & Furniture",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/bed-mattress/l/z/d/6-78-60-orthopaedic-memory-foam-wakefit-original-imahf55yg8hyvuyq.jpeg?q=70",
+    "price": 9899,
+    "originalPrice": 16999,
+    "discount": "41% off",
+    "rating": 4.5,
+    "ratingCount": 63200,
+    "reviewsCount": 5400,
+    "isFlipkartAssured": true,
+    "specs": [
+      "Length: 78 inch, Width: 60 inch, Thickness: 6 inch",
+      "High Density Foam & Next-Gen Memory Foam",
+      "Spinal Alignment Support",
+      "Breathable Removable Zipper Cover",
+      "10 Years Warranty"
+    ],
+    "description": "Wakefit Orthopedic mattress contours to your spine and distributes body weight evenly for deep, restorative sleep."
+  },
+  {
+    "id": "prod-10",
+    "name": "Mi 43 Inch 4K Ultra HD Smart Google TV (L43M8-A2IN)",
+    "category": "Electronics",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/television/h/z/p/-original-imah4ygcfzwhhh8p.jpeg?q=70",
+    "price": 23999,
+    "originalPrice": 35999,
+    "discount": "33% off",
+    "rating": 4.4,
+    "ratingCount": 78900,
+    "reviewsCount": 6510,
+    "isFlipkartAssured": true,
+    "specs": [
+      "4K Ultra HD (3840 x 2160) Resolution",
+      "Dolby Audio & DTS Virtual:X Sound (30W Speakers)",
+      "Google TV with PatchWall+",
+      "Dual Band Wi-Fi & Bluetooth 5.0",
+      "2 GB RAM | 8 GB Storage"
+    ],
+    "description": "Vibrant 4K cinematic clarity with Dolby Audio and limitless entertainment with Google TV and Google Assistant."
+  },
+  {
+    "id": "prod-11",
+    "name": "Nike Men Revolution 7 Running Shoes",
+    "category": "Fashion",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/1/9/c/-original-imagu9cag7x8twhs.jpeg?q=70",
+    "price": 3195,
+    "originalPrice": 3695,
+    "discount": "13% off",
+    "rating": 4.4,
+    "ratingCount": 31200,
+    "reviewsCount": 1940,
+    "isFlipkartAssured": true,
+    "specs": [
+      "Soft Foam Midsole for Cushioned Stride",
+      "Generative Traction Rubber Outsole",
+      "Puff Points for Achilles Tendon Comfort",
+      "Engineered Mesh Upper"
+    ],
+    "description": "Loaded with the sort of intuitive cushioning and support that might change your running world. Stylish, comfortable, and durable."
+  },
+  {
+    "id": "prod-12",
+    "name": "Prestige Iris 750 Watt Mixer Grinder with 4 Jars",
+    "category": "Appliances",
+    "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/mixer-grinder-juicer/t/c/p/iris-plus-prestige-original-imaghfqz8vggzh7a.jpeg?q=70",
+    "price": 2999,
+    "originalPrice": 6195,
+    "discount": "51% off",
+    "rating": 4.1,
+    "ratingCount": 142000,
+    "reviewsCount": 9820,
+    "isFlipkartAssured": true,
+    "specs": [
+      "750W Heavy Duty Motor",
+      "3 Stainless Steel Jars + 1 Transparent Juicer Jar",
+      "Multipurpose Ergonomic Blades",
+      "Overload Protection Switch"
+    ],
+    "description": "Power-packed 750W motor chops, grinds and blends every culinary requirement with supreme speed and safety."
+  }
+]
